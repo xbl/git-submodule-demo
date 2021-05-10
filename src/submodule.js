@@ -14,7 +14,11 @@ const getSubmoduleList = function(str) {
         const line = lines[i];
         if (!line.includes(prefix)) continue ;
         const name = line.substring(line.indexOf(prefix) + prefix.length, line.lastIndexOf(suffix));
-        const path = lines[i + 1].trim().replace(pathPrefix, '');
+        const pathLine = lines[i + 1];
+        if (!pathLine.includes(pathPrefix)) {
+            throw new Error('缺少path');
+        }
+        const path = pathLine.trim().replace(pathPrefix, '');
         const url = lines[i + 2].trim().replace(urlPrefix, '');
         const { host, pathname } = URL.parse(url);
         const newUrl = host + pathname;
