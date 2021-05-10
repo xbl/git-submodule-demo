@@ -55,7 +55,7 @@ it('Given 多行submodule 字符串，When 调用 getSubmoduleList，Then 返回
 it('Given 多行submodule 字符串 And URL 重复，When 调用 getSubmoduleList，Then 抛出异常 ', () => {
     assert.throws(
         () => {
-            const result = getSubmoduleList(`
+            getSubmoduleList(`
             [submodule "leg"]
                 path = pathleg
                 url = https://git.oschina.net/gaofeifps/leg.git
@@ -74,7 +74,7 @@ it('Given 多行submodule 字符串 And URL 重复，When 调用 getSubmoduleLis
 it('Given 多行submodule 字符串 And URL 前缀不同 And URL 重复，When 调用 getSubmoduleList，Then 抛出异常 ', () => {
     assert.throws(
         () => {
-            const result = getSubmoduleList(`
+            getSubmoduleList(`
             [submodule "leg"]
                 path = pathleg
                 url = https://git.oschina.net/gaofeifps/leg.git
