@@ -26,6 +26,7 @@ const checkDuplicate = (url, map) => {
     if (map[newUrl]) {
         throw new Error('URL 相同');
     }
+    map[newUrl] = newUrl;
     return newUrl;
 }
 
@@ -41,13 +42,12 @@ const getSubmoduleList = function(str) {
         const name = line.substring(line.indexOf(prefix) + prefix.length, line.lastIndexOf(suffix));
         const path = getPath(lines[i + 1]);
         const url = getUrl(lines[i + 2]);
-        const newUrl = checkDuplicate(url, map);
+        checkDuplicate(url, map);
         const obj = {
             name,
             path,
             url
         };
-        map[newUrl] = obj;
         result.push(obj);
     }
 
