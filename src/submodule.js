@@ -6,19 +6,28 @@ const suffix = '"]';
 const pathPrefix = 'path = ';
 const urlPrefix = 'url = ';
 
-const getPath = function (pathLine) {
+const getPath = (pathLine) => {
     if (!pathLine.includes(pathPrefix)) {
         throw new Error('缺少path');
     }
     return pathLine.trim().replace(pathPrefix, '');
 };
 
-const getUrl = function (UrlLine) {
+const getUrl = (UrlLine) => {
     if (!UrlLine.includes(urlPrefix)) {
         throw new Error('缺少url');
     }
     return UrlLine.trim().replace(urlPrefix, '');
 };
+
+const checkDuplicate = (url, map) => {
+    const { host, pathname } = URL.parse(url);
+    const newUrl = host + pathname;
+    if (map[newUrl]) {
+        throw new Error('URL 相同');
+    }
+    return newUrl;
+}
 
 const getSubmoduleList = function(str) {
     const result = [];
@@ -57,11 +66,3 @@ module.exports = {
     readSubmoduleFile
 };
 
-function checkDuplicate(url, map) {
-    const { host, pathname } = URL.parse(url);
-    const newUrl = host + pathname;
-    if (map[newUrl]) {
-        throw new Error('URL 相同');
-    }
-    return newUrl;
-}
