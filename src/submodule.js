@@ -5,12 +5,18 @@ const suffix = '"]';
 const pathPrefix = 'path = ';
 const urlPrefix = 'url = ';
 
-const getPath = function (pathStr) {
-    const pathLine = pathStr;
+const getPath = function (pathLine) {
     if (!pathLine.includes(pathPrefix)) {
         throw new Error('缺少path');
     }
     return pathLine.trim().replace(pathPrefix, '');
+};
+
+const getUrl = function (UrlLine) {
+    if (!UrlLine.includes(urlPrefix)) {
+        throw new Error('缺少url');
+    }
+    return UrlLine.trim().replace(urlPrefix, '');
 };
 
 const getSubmoduleList = function(str) {
@@ -24,11 +30,7 @@ const getSubmoduleList = function(str) {
         if (!line.includes(prefix)) continue ;
         const name = line.substring(line.indexOf(prefix) + prefix.length, line.lastIndexOf(suffix));
         const path = getPath(lines[i + 1]);
-        const UrlLine = lines[i + 2];
-        if (!UrlLine.includes(urlPrefix)) {
-            throw new Error('缺少url');
-        }
-        const url = UrlLine.trim().replace(urlPrefix, '');
+        const url = getUrl(lines[i + 2]);
         const { host, pathname } = URL.parse(url);
         const newUrl = host + pathname;
         if (map[newUrl]) {
