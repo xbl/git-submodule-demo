@@ -1,4 +1,5 @@
 const URL = require('url');
+const fs = require('fs');
 
 const prefix = '[submodule "';
 const suffix = '"]';
@@ -48,4 +49,14 @@ const getSubmoduleList = function(str) {
     return result;
 };
 
-exports.getSubmoduleList = getSubmoduleList;
+const readSubmoduleFile = () => {
+    const str = fs.readFileSync('./.gitsubmodule', 'utf-8');
+    return getSubmoduleList(str);
+}
+
+console.log(readSubmoduleFile());
+
+module.exports = {
+    getSubmoduleList,
+    readSubmoduleFile
+};
