@@ -51,3 +51,22 @@ it('Given 多行submodule 字符串，When 调用 getSubmoduleList，Then 返回
     assert.equal(submodule.path, 'pathleg1');
     assert.equal(submodule.url, 'https://git.oschina.net/gaofeifps/leg1.git');
 });
+
+it('Given 多行submodule 字符串 And URL 重复，When 调用 getSubmoduleList，Then 抛出异常 ', () => {
+    assert.throws(
+        () => {
+            const result = getSubmoduleList(`
+            [submodule "leg"]
+                path = pathleg
+                url = https://git.oschina.net/gaofeifps/leg.git
+            [submodule "leg1"]
+                path = pathleg1
+                url = https://git.oschina.net/gaofeifps/leg.git
+            `);
+        },
+        {
+            name: 'Error',
+            message: 'URL 相同'
+        }
+    );
+});
