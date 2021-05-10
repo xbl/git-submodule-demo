@@ -1,3 +1,5 @@
+const URL = require('url');
+
 const getSubmoduleList = function(str) {
     const result = [];
     if (!str) return result;
@@ -14,7 +16,9 @@ const getSubmoduleList = function(str) {
         const name = line.substring(line.indexOf(prefix) + prefix.length, line.lastIndexOf(suffix));
         const path = lines[i + 1].trim().replace(pathPrefix, '');
         const url = lines[i + 2].trim().replace(urlPrefix, '');
-        if (map[url]) {
+        const { host, pathname } = URL.parse(url);
+        const newUrl = host + pathname;
+        if (map[newUrl]) {
             throw new Error('URL 相同');
         }
         const obj = {
@@ -22,7 +26,7 @@ const getSubmoduleList = function(str) {
             path,
             url
         };
-        map[url] = obj;
+        map[newUrl] = obj;
         result.push(obj);
     }
 
