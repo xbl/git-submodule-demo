@@ -1,7 +1,7 @@
 const URL = require('url');
 const fs = require('fs');
 
-const prefix = '[submodule "';
+const namePrefix = '[submodule "';
 const pathPrefix = 'path';
 const urlPrefix = 'url';
 const separator = '=';
@@ -32,10 +32,11 @@ const checkDuplicate = (url, map) => {
     return newUrl;
 };
 
-const checkSubmoduleName = (line) => {
-    if (!line.trim().startsWith(prefix)) {
+const getSubmoduleName = (line) => {
+    if (!line.trim().startsWith(namePrefix)) {
         throw new Error('缺少name');
     }
+    return line.replace(/\[submodule \"(\w+)\s*\"\]/, '$1').trim();
 };
 
 const getSubmoduleList = function(str) {
@@ -45,30 +46,28 @@ const getSubmoduleList = function(str) {
     const map = {};
     let i = 0;
     while(i < lines.length) {
-        const line = lines[i];
-        checkSubmoduleName(line);
-        const name = line.replace(/\[submodule \"(\w+)\s*\"\]/, '$1').trim();
+        const name = getSubmoduleName(lines[i]);
         const path = getPath(lines[i + 1]);
         const url = getUrl(lines[i + 2]);
         checkDuplicate(url, map);
-        const obj = {
+        const submodule = {
             name,
             path,
             url
         };
-        result.push(obj);
+        result.push(submodule);
         i = Math.min(i + subModuleStep, lines.length);
     }
 
     return result;
 };
 
-const readSubmoduleFile = () => {
-    const str = fs.readFileSync('./.gitsubmodule', 'utf-8');
+const readSubmoduleFile = (submoduleFilePath) => {
+    const str = fs.readFileSync(submoduleFilePath, 'utf-8');
     return getSubmoduleList(str);
 }
 
-console.log(readSubmoduleFile());
+console.log(readSubmoduleFile('./.gitsubmodule'));
 
 module.exports = {
     getSubmoduleList,
