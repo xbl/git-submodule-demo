@@ -2,14 +2,16 @@ const URL = require('url');
 const fs = require('fs');
 
 const prefix = '[submodule "';
-const pathPrefix = 'path = ';
+const pathPrefix = 'path';
 const urlPrefix = 'url = ';
+const subModuleStep = 3;
 
 const getPath = (pathLine) => {
-    if (!pathLine.includes(pathPrefix)) {
+    const newPathLine = pathLine.trim();
+    if (!newPathLine.startsWith(pathPrefix)) {
         throw new Error('缺少path');
     }
-    return pathLine.trim().replace(pathPrefix, '');
+    return newPathLine.split('=').pop().trim();
 };
 
 const getUrl = (UrlLine) => {
@@ -50,7 +52,7 @@ const getSubmoduleList = function(str) {
             url
         };
         result.push(obj);
-        i = Math.min(i + 3, lines.length);
+        i = Math.min(i + subModuleStep, lines.length);
     }
 
     return result;

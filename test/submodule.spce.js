@@ -143,3 +143,16 @@ it('Given 多行submodule 字符串 And 缺少 name，When 调用 getSubmoduleLi
         }
     );
 });
+
+it('Given 正确submodule 字符串 And path 与等号之间无空格，When 调用 getSubmoduleList，Then 返回 包含submodule 名字的对象数组 ', () => {
+    const result = getSubmoduleList(`
+    [submodule "leg"]
+        path=pathleg
+        url = https://git.oschina.net/gaofeifps/leg.git
+    `);
+
+    assert.equal(Array.isArray(result), true);
+    assert.equal(result.length, 1);
+    assert.equal(result[0].name, 'leg');
+    assert.equal(result[0].path, 'pathleg');
+});
