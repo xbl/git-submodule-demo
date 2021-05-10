@@ -1,12 +1,21 @@
 const URL = require('url');
 
+const prefix = '[submodule "';
+const suffix = '"]';
+const pathPrefix = 'path = ';
+const urlPrefix = 'url = ';
+
+const getPath = function (pathStr) {
+    const pathLine = pathStr;
+    if (!pathLine.includes(pathPrefix)) {
+        throw new Error('缺少path');
+    }
+    return pathLine.trim().replace(pathPrefix, '');
+};
+
 const getSubmoduleList = function(str) {
     const result = [];
     if (!str) return result;
-    const prefix = '[submodule "';
-    const suffix = '"]';
-    const pathPrefix = 'path = ';
-    const urlPrefix = 'url = ';
     const lines = str.split('\n');
     const map = {};
 
@@ -14,11 +23,7 @@ const getSubmoduleList = function(str) {
         const line = lines[i];
         if (!line.includes(prefix)) continue ;
         const name = line.substring(line.indexOf(prefix) + prefix.length, line.lastIndexOf(suffix));
-        const pathLine = lines[i + 1];
-        if (!pathLine.includes(pathPrefix)) {
-            throw new Error('缺少path');
-        }
-        const path = pathLine.trim().replace(pathPrefix, '');
+        const path = getPath(lines[i + 1]);
         const UrlLine = lines[i + 2];
         if (!UrlLine.includes(urlPrefix)) {
             throw new Error('缺少url');
@@ -37,7 +42,6 @@ const getSubmoduleList = function(str) {
         map[newUrl] = obj;
         result.push(obj);
     }
-
 
     return result;
 };
