@@ -32,11 +32,7 @@ const getSubmoduleList = function(str) {
         const name = line.substring(line.indexOf(prefix) + prefix.length, line.lastIndexOf(suffix));
         const path = getPath(lines[i + 1]);
         const url = getUrl(lines[i + 2]);
-        const { host, pathname } = URL.parse(url);
-        const newUrl = host + pathname;
-        if (map[newUrl]) {
-            throw new Error('URL 相同');
-        }
+        const newUrl = checkDuplicate(url, map);
         const obj = {
             name,
             path,
@@ -60,3 +56,12 @@ module.exports = {
     getSubmoduleList,
     readSubmoduleFile
 };
+
+function checkDuplicate(url, map) {
+    const { host, pathname } = URL.parse(url);
+    const newUrl = host + pathname;
+    if (map[newUrl]) {
+        throw new Error('URL 相同');
+    }
+    return newUrl;
+}
