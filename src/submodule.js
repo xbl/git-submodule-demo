@@ -2,7 +2,6 @@ const URL = require('url');
 const fs = require('fs');
 
 const prefix = '[submodule "';
-const suffix = '"]';
 const pathPrefix = 'path = ';
 const urlPrefix = 'url = ';
 
@@ -14,7 +13,7 @@ const getPath = (pathLine) => {
 };
 
 const getUrl = (UrlLine) => {
-    if (!UrlLine.includes(urlPrefix)) {
+    if (!UrlLine || !UrlLine.includes(urlPrefix)) {
         throw new Error('缺少url');
     }
     return UrlLine.trim().replace(urlPrefix, '');
@@ -33,13 +32,15 @@ const checkDuplicate = (url, map) => {
 const getSubmoduleList = function(str) {
     const result = [];
     if (!str) return result;
-    const lines = str.split('\n');
+    const lines = str.trim().split('\n');
     const map = {};
-
-    for(let i = 0; i < lines.length; i++) {
+    let i = 0;
+    while(i < lines.length) {
         const line = lines[i];
-        if (!line.includes(prefix)) continue ;
-        const name = line.substring(line.indexOf(prefix) + prefix.length, line.lastIndexOf(suffix));
+        if (!line.includes(prefix)) {
+            throw new Error('缺少name');
+        }
+        const name = line.replace(/\[submodule \"(\w+)\s*\"\]/, '$1').trim();
         const path = getPath(lines[i + 1]);
         const url = getUrl(lines[i + 2]);
         checkDuplicate(url, map);
@@ -49,6 +50,7 @@ const getSubmoduleList = function(str) {
             url
         };
         result.push(obj);
+        i = Math.min(i + 3, lines.length);
     }
 
     return result;
