@@ -1,27 +1,27 @@
 const URL = require('url');
 const fs = require('fs');
 
-const namePrefix = '[submodule "';
-const pathPrefix = 'path';
-const urlPrefix = 'url';
-const separator = '=';
-const subModuleStep = 3;
+const NAME_PREFIX = '[submodule "';
+const PATH_PREFIX = 'path';
+const URL_PREFIX = 'url';
+const SEPARATOR = '=';
+const SUB_MODULE_STEP = 3;
 
 const getPath = (pathLine) => {
-    if (!pathLine || !pathLine.trim().startsWith(pathPrefix)) {
+    if (!pathLine || !pathLine.trim().startsWith(PATH_PREFIX)) {
         throw new Error('缺少path');
     }
-    return pathLine.split(separator).pop().trim();
+    return pathLine.split(SEPARATOR).pop().trim();
 };
 
-const getUrl = (UrlLine) => {
-    if (!UrlLine || !UrlLine.trim().startsWith(urlPrefix)) {
+const getUrl = (urlLine) => {
+    if (!urlLine || !urlLine.trim().startsWith(URL_PREFIX)) {
         throw new Error('缺少url');
     }
-    return UrlLine.split(separator).pop().trim();
+    return urlLine.split(SEPARATOR).pop().trim();
 };
 
-const checkDuplicate = (url, map) => {
+const checkDuplicateByURL = (url, map) => {
     const { host, pathname } = URL.parse(url);
     const newUrl = host + pathname;
     if (map[newUrl]) {
@@ -32,7 +32,7 @@ const checkDuplicate = (url, map) => {
 };
 
 const getSubmoduleName = (line) => {
-    if (!line.trim().startsWith(namePrefix)) {
+    if (!line.trim().startsWith(NAME_PREFIX)) {
         throw new Error('缺少name');
     }
     return line.replace(/\[submodule \"(\w+)\s*\"\]/, '$1').trim();
@@ -48,14 +48,14 @@ const getSubmoduleList = function(str) {
         const name = getSubmoduleName(lines[i]);
         const path = getPath(lines[i + 1]);
         const url = getUrl(lines[i + 2]);
-        checkDuplicate(url, map);
+        checkDuplicateByURL(url, map);
         const submodule = {
             name,
             path,
             url
         };
         result.push(submodule);
-        i = Math.min(i + subModuleStep, lines.length);
+        i = Math.min(i + SUB_MODULE_STEP, lines.length);
     }
 
     return result;
