@@ -169,3 +169,17 @@ it('Given 正确submodule 字符串 And url 与等号之间无空格，When 调�
     assert.equal(result[0].name, 'leg');
     assert.equal(result[0].url, 'https://git.oschina.net/gaofeifps/leg.git');
 });
+
+it('Given submodule 字符串 path，When 调用 getSubmoduleList，Then 抛出异常 ', () => {
+    assert.throws(
+        () => {
+            getSubmoduleList(`
+            [submodule "leg"]
+            `);
+        },
+        {
+            name: 'Error',
+            message: '缺少path'
+        }
+    );
+});

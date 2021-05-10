@@ -8,11 +8,10 @@ const separator = '=';
 const subModuleStep = 3;
 
 const getPath = (pathLine) => {
-    const newPathLine = pathLine.trim();
-    if (!newPathLine.startsWith(pathPrefix)) {
+    if (!pathLine || !pathLine.trim().startsWith(pathPrefix)) {
         throw new Error('缺少path');
     }
-    return newPathLine.split(separator).pop().trim();
+    return pathLine.split(separator).pop().trim();
 };
 
 const getUrl = (UrlLine) => {
