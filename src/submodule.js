@@ -19,7 +19,11 @@ const getSubmoduleList = function(str) {
             throw new Error('缺少path');
         }
         const path = pathLine.trim().replace(pathPrefix, '');
-        const url = lines[i + 2].trim().replace(urlPrefix, '');
+        const UrlLine = lines[i + 2];
+        if (!UrlLine.includes(urlPrefix)) {
+            throw new Error('缺少url');
+        }
+        const url = UrlLine.trim().replace(urlPrefix, '');
         const { host, pathname } = URL.parse(url);
         const newUrl = host + pathname;
         if (map[newUrl]) {

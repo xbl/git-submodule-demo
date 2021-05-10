@@ -107,3 +107,21 @@ it('Given 多行submodule 字符串 And 缺少 path，When 调用 getSubmoduleLi
         }
     );
 });
+
+it('Given 多行submodule 字符串 And 缺少 path，When 调用 getSubmoduleList，Then 抛出异常 ', () => {
+    assert.throws(
+        () => {
+            getSubmoduleList(`
+            [submodule "leg"]
+                path = pathleg
+                url = https://git.oschina.net/gaofeifps/leg.git
+            [submodule "leg1"]
+                path = pathleg
+            `);
+        },
+        {
+            name: 'Error',
+            message: '缺少url'
+        }
+    );
+});
