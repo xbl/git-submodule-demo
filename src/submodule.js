@@ -2,23 +2,18 @@ const URL = require('url');
 const fs = require('fs');
 
 const NAME_PREFIX = '[submodule "';
-const PATH_PREFIX = 'path';
-const URL_PREFIX = 'url';
+const ATTR_PREFIX = {
+    PATH: 'path',
+    URL: 'url'
+};
 const SEPARATOR = '=';
 const SUB_MODULE_STEP = 3;
 
-const getPath = (pathLine) => {
-    if (!pathLine || !pathLine.trim().startsWith(PATH_PREFIX)) {
-        throw new Error('缺少path');
+const getValueByKey = (key, line) => {
+    if (!line || !line.trim().startsWith(key)) {
+        throw new Error(`缺少${key}`);
     }
-    return pathLine.split(SEPARATOR).pop().trim();
-};
-
-const getUrl = (urlLine) => {
-    if (!urlLine || !urlLine.trim().startsWith(URL_PREFIX)) {
-        throw new Error('缺少url');
-    }
-    return urlLine.split(SEPARATOR).pop().trim();
+    return line.split(SEPARATOR).pop().trim();
 };
 
 const checkDuplicateByURL = (url, map) => {
@@ -46,8 +41,8 @@ const getSubmoduleList = function(str) {
     let i = 0;
     while(i < lines.length) {
         const name = getSubmoduleName(lines[i]);
-        const path = getPath(lines[i + 1]);
-        const url = getUrl(lines[i + 2]);
+        const path = getValueByKey(ATTR_PREFIX.PATH, lines[i + 1]);
+        const url = getValueByKey(ATTR_PREFIX.URL, lines[i + 2]);
         checkDuplicateByURL(url, map);
         const submodule = {
             name,
