@@ -45,7 +45,7 @@ const getSubmoduleList = function(str) {
             i++;
             continue;
         }
-        const name = getSubmoduleName(lines[i]);
+        const name = getSubmoduleName(line);
         const path = getValueByKey(ATTR_PREFIX.PATH, lines[i + 1]);
         const url = getValueByKey(ATTR_PREFIX.URL, lines[i + 2]);
         checkDuplicateByURL(url, map);
