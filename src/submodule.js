@@ -40,6 +40,11 @@ const getSubmoduleList = function(str) {
     const map = {};
     let i = 0;
     while(i < lines.length) {
+        const line = lines[i];
+        if (!line.trim()) {
+            i++;
+            continue;
+        }
         const name = getSubmoduleName(lines[i]);
         const path = getValueByKey(ATTR_PREFIX.PATH, lines[i + 1]);
         const url = getValueByKey(ATTR_PREFIX.URL, lines[i + 2]);
