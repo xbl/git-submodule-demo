@@ -55,7 +55,7 @@ const getSubmoduleList = function(str) {
             url
         };
         result.push(submodule);
-        i = Math.min(i + SUB_MODULE_STEP, lines.length);
+        i += SUB_MODULE_STEP;
     }
 
     return result;
